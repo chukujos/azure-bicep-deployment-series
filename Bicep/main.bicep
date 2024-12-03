@@ -1,6 +1,6 @@
 targetScope='subscription'
 
-param resourceGroupUKSParam object
+param resourceGroupEUSParam object
 param tagsParam object
 param vnetParam object
 param vmParam object
@@ -8,34 +8,34 @@ param deploySSHParam bool = false
 
 param deploymentNameParam string  = 'agentpool'
 
-module resourceGroupUKS 'modules/resource-group.bicep' = {
+module resourceGroupEUS 'modules/resource-group.bicep' = {
   name: '${deploymentNameParam}-resourceGroup'
   params: {
-    resourceGroup: resourceGroupUKSParam
+    resourceGroup: resourceGroupEUSParam
     tags: tagsParam
   }
 }
 
 module virtualNetwork 'modules/virtual-network.bicep' = {
   name: '${deploymentNameParam}-virtual-network'
-  scope: resourceGroup(resourceGroupUKSParam.name)
+  scope: resourceGroup(resourceGroupEUSParam.name)
   params: {
     vnet: vnetParam
-    location: resourceGroupUKSParam.location
+    location: resourceGroupEUSParam.location
     tags: tagsParam
     deploySSH: deploySSHParam
   }
   dependsOn: [
-    resourceGroupUKS
+    resourceGroupEUS
   ]
 }
 
 module virtualMachine 'modules/virtual-machine.bicep' = {
   name: '${deploymentNameParam}-virtual-machine'
-  scope: resourceGroup(resourceGroupUKSParam.name)
+  scope: resourceGroup(resourceGroupEUSParam.name)
   params: {
     vm: vmParam
-    location: resourceGroupUKSParam.location
+    location: resourceGroupEUSParam.location
     tags: tagsParam
     subnetId: virtualNetwork.outputs.subnetId
     networkSecurityGroupId: virtualNetwork.outputs.networkSecurityGroupId
@@ -47,7 +47,7 @@ module virtualMachine 'modules/virtual-machine.bicep' = {
 
 module roleAssignment 'modules/role-assignment.bicep' = {
   name: '${deploymentNameParam}-role-assignment'
-  scope: resourceGroup(resourceGroupUKSParam.name)
+  scope: resourceGroup(resourceGroupEUSParam.name)
   params: {
     vmManagedIdentityPrincipalId: virtualMachine.outputs.vmManagedIdentityPrincipalId
   }

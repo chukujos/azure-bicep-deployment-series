@@ -2,13 +2,13 @@ using '../main.bicep'
 
 param deploySSHParam = true
 
-param resourceGroupUKSParam = {
+param resourceGroupEUSParam = {
   name: 'demo'
-  location: 'uksouth'
+  location: 'eastus'
 }
 
 param tagsParam = {
-  owner: 'nacho'
+  owner: 'Josiah'
   workload: 'agentpool'
   application: 'azureDevOps'
   env: 'lab'
